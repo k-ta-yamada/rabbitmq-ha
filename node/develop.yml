@@ -1,0 +1,179 @@
+common:
+  vip: &vip 192.168.1.100
+  # hostnames:
+  #   primary: mq1
+  #   standby: mq2
+  # database_users:
+  #   superuser:            &superuser            postgres
+  #   superuser_password:   &superuser_password   postgres
+  #   replication_user:     &replication_user     repl
+  #   replication_password: &replication_password repl
+  #   xxx_check_user:       &xxx_check_user       pgpool
+  #   xxx_check_password:   &xxx_check_password   pgpool
+  #   recovery_user:        &recovery_user        postgres
+  #   recovery_password:    &recovery_password    postgres
+
+# ../cookbooks/hosts/default.rb
+hosts:
+  file_name: /etc/hosts
+  vip:
+    - host: mq
+      ip:   *vip
+  frontend:
+    - host: mq
+      ip:   192.168.1.100
+    - host: mq1
+      ip:   192.168.1.101
+    - host: mq2
+      ip:   192.168.1.102
+  backend_prefix: backend-
+  backend:
+    # - host: mq
+    #   ip:   192.168.2.100
+    - host: mq1
+      ip:   192.168.2.101
+    - host: mq2
+      ip:   192.168.2.102
+
+# # ../cookbooks/postgresql/default.rb
+# postgresql:
+#   rpm: https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+#   pkg:
+#     - postgresql96
+#     - postgresql96-server
+#     - postgresql96-devel
+#     - postgresql96-libs
+#     - postgresql96-contrib
+#     # - pgpool-II-96-extensions
+#   rpm_for_extension:
+#     http://www.pgpool.net/yum/rpms/3.6/redhat/rhel-7-x86_64/pgpool-II-release-3.6-1.noarch.rpm
+#   pkg_for_extension:
+#     - pgpool-II-pg96-extensions
+#   common:
+#     bindir:     /usr/pgsql-9.6/bin/
+#     pgdata:     &pgdata     /var/lib/pgsql/9.6/data/
+#     archivedir: &archivedir /var/lib/pgsql/9.6/archivedir/
+#     superuser:          *superuser
+#     superuser_password: *superuser_password
+#   pgpass:
+#     path: /var/lib/pgsql/
+#     entries:
+#       - host:     pg1
+#         port:     5432
+#         database: replication
+#         username: *replication_user
+#         password: *replication_password
+#       - host:     pg2
+#         port:     5432
+#         database: replication
+#         username: *replication_user
+#         password: *replication_password
+#   initdb:
+#     su:
+#       user: postgres
+#     option:
+#       pgdata:   *pgdata
+#       encoding: UTF8
+#       locale:   C
+#       pwfile:   /var/lib/pgsql/pwfile
+#       username: *superuser
+#   pg_hba_conf:
+#     - type:        host
+#       database:    all
+#       user:        *superuser
+#       address:     192.168.1.0/24
+#       method_name: md5
+#     - type:        host
+#       database:    all
+#       user:        *recovery_user
+#       address:     192.168.2.0/24
+#       method_name: md5
+#     - type:        host
+#       database:    all
+#       user:        *xxx_check_user
+#       address:     192.168.2.0/24
+#       method_name: md5
+#     - type:        host
+#       database:    replication
+#       user:        *replication_user
+#       address:     192.168.2.0/24
+#       method_name: md5
+#   postgresql_conf:
+#     listen_addresses:  "*"
+#     wal_level:         replica
+#     max_wal_senders:   2
+#     wal_keep_segments: 32
+#     archive_mode:      "on"
+#   recovery_1st_stage_sh:
+#     replication_user: *replication_user
+#   create_role:
+#     - name:     *replication_user
+#       password: *replication_password
+#       option:
+#         - LOGIN
+#         - REPLICATION
+#     - name:     *xxx_check_user
+#       password: *xxx_check_password
+#       option:
+#         - LOGIN
+#   create_extension:
+#     - name: pgpool_recovery
+#       dbname: template1
+#       # option: []
+
+# # ../cookbooks/pgpool-II/default.rb
+# pgpool:
+#   rpm: http://www.pgpool.net/yum/rpms/3.6/redhat/rhel-7-x86_64/pgpool-II-release-3.6-1.noarch.rpm
+#   pkg:
+#     - pgpool-II-pg96
+#     - pgpool-II-pg96-debuginfo
+#     - pgpool-II-pg96-devel
+#     - pgpool-II-pg96-extensions
+#   common:
+#     rundir: &rundir /var/run/pgpool
+#   pcp_conf:
+#     - username: *recovery_user
+#       md5auth:  *recovery_password
+#     - username: *xxx_check_user
+#       md5auth:  *xxx_check_password
+#   pgpool_conf:
+#     socket_dir:        *rundir
+#     pcp_socket_dir:    *rundir
+#     logdir:            *rundir
+#     wd_ipc_socket_dir: *rundir
+#     delegate_ip:  *vip
+#     # nic_dev_name: enp0s8
+#     nic_dev_name: eth1
+#     # NOTE: /etc/hostsに記載のバックエンドのalias名を使用すること
+#     backend_hostname0: backend-pg1
+#     backend_data_directory0: /var/lib/pgsql/9.6/data/
+#     # NOTE: /etc/hostsに記載のバックエンドのalias名を使用すること
+#     backend_hostname1: backend-pg2
+#     backend_data_directory1: /var/lib/pgsql/9.6/data/
+#     log_destination:       syslog,stderr
+#     sr_check_user:         *xxx_check_user
+#     sr_check_password:     *xxx_check_password
+#     sr_check_database:     postgres
+#     health_check_user:     *xxx_check_user
+#     health_check_password: *xxx_check_password
+#     failover_command:      /etc/pgpool-II/failover.sh %d %P %H %R
+#     recovery_user:         *recovery_user
+#     recovery_password:     *recovery_password
+#     recovery_1st_stage_command: recovery_1st_stage.sh
+#     recovery_2nd_stage_command: pgpool_remote_start
+#   pool_hba_conf:
+#     - type:        host
+#       database:    all
+#       user:        *xxx_check_user
+#       address:     0.0.0.0/0
+#       method_name: md5
+#     - type:        host
+#       database:    all
+#       user:        *recovery_user
+#       address:     0.0.0.0/0
+#       method_name: md5
+#   pool_passwd:
+#     - username: *recovery_user
+#       md5auth:  *recovery_password
+#     - username: *xxx_check_user
+#       md5auth:  *xxx_check_password
