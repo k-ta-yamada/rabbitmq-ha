@@ -34,3 +34,45 @@ rabbitmq:
   .erlang.cookie:
     path: /var/lib/rabbitmq/
     content: this is cookie
+
+haproxy:
+  pkg:
+    - haproxy
+  haproxy_conf:
+    global:   # TODO:
+    defaults: # TODO:
+    tcp:
+      frontend:
+        name: rabbitmq
+        port: 5670
+      backend:
+        balance: roundrobin
+        servers:
+          - name:     rabbitmq-server1
+            address:  mq1
+            port:     5672
+            settings: check inter 1s rise 2 fall 3
+          - name:     rabbitmq-server2
+            address:  mq2
+            port:     5672
+            settings: check inter 1s rise 2 fall 3
+    http:
+      frontend:
+        name: rabbitmq_mng
+        port: 15670
+      backend:
+        balance: roundrobin
+        servers:
+          - name:     rabbitmq_mng1
+            address:  mq1
+            port:     15672
+            settings: check inter 1s rise 2 fall 3
+          - name:     rabbitmq_mng2
+            address:  mq2
+            port:     15672
+            settings: check inter 1s rise 2 fall 3
+    stats:
+      uri: /haproxy_stats
+      auth:
+        username: ha
+        password: ha
