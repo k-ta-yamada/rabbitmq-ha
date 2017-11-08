@@ -34,6 +34,10 @@ itamae ssh -h mq2 -y node/develop.yml roles/rabbit_slave.rb
 # `mq1` and `mq2`: haproxy
 itamae ssh -h mq1 -y node/develop.yml roles/haproxy.rb
 itamae ssh -h mq2 -y node/develop.yml roles/haproxy.rb
+
+# `mq1` and `mq2`: keepalived
+itamae ssh -h mq1 -y node/develop.yml roles/keepalived.rb
+itamae ssh -h mq2 -y node/develop.yml roles/keepalived.rb
 ```
 
 
@@ -51,8 +55,14 @@ itamae ssh -h mq2 -y node/develop.yml roles/haproxy.rb
 
 ### RabbitMQ
 
-[RabbitMQ - Messaging that just works](https://www.rabbitmq.com/)
+- [RabbitMQ - Messaging that just works](https://www.rabbitmq.com/)
 
 ### HAProxy
 
-[HAProxy Documentation Converter](http://cbonte.github.io/haproxy-dconv/)
+- [HAProxy Documentation Converter](http://cbonte.github.io/haproxy-dconv/)
+
+### keepalived
+
+- [keepalived.conf - configuration file for keepalived - Linux Man Pages (5)](https://www.systutorials.com/docs/linux/man/5-keepalived.conf/)
+- [./cookbooks/keepalived/files/etc/keepalived/man-5-keepalived.conf](./cookbooks/keepalived/files/etc/keepalived/man-5-keepalived.conf)
+- [17.5.1 Keepalived構成ファイルについて](https://docs.oracle.com/cd/E39368_01/e48214/section_wv3_hjn_pr.html)
