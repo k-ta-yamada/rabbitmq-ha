@@ -1,0 +1,7 @@
+{
+    "MD007": { "indent": 4 },
+    "MD009": { "br_spaces": 2 },
+    "MD012": { "maximum": 3 },
+    "MD013": { "line_length": 120 },
+    "MD032": false
+}
