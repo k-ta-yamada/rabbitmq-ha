@@ -78,19 +78,10 @@ keepalived:
     - keepalived
   keepalived_conf:
     global_defs:
-      # notification_email:
-      #   - acassen@firewall.loc
-      #   - failover@firewall.loc
-      #   - sysadmin@firewall.loc
-      notification_email: []
-      notification_email_from: Alexandre.Cassen@firewall.loc
-      smtp_server: 192.168.200.1
-      smtp_connect_timeout: 30
       router_id: LVS_DEVEL
     vrrp_script:
       name: chk_haproxy
-
-      # TODO: need `yum install psmisc`
+      # MEMO: `killall` need `yum install psmisc`
       # script: '"killall -0 haproxy"'
       script: '"systemctl is-active haproxy.service"'
       interval: 2
@@ -98,16 +89,9 @@ keepalived:
     vrrp_instance:
       name: VI_1
       interface: eth1
-
-      # TODO:
-      track_interface:
-        - eth1
-        # - eth2
       state: BACKUP
       virtual_router_id: 51
       priority: 100
-
-      # TODO:
       virtual_ipaddress:
         - address:   *vip
           interface: eth1
