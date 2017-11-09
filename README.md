@@ -60,9 +60,13 @@ itamae ssh -h mq2 -y node/develop.yml roles/keepalived.rb
 ### HAProxy
 
 - [HAProxy Documentation Converter](http://cbonte.github.io/haproxy-dconv/)
+- [HAProxyを使い始めてみる - Qiita](https://qiita.com/saka1_p/items/3634ba70f9ecd74b0860)
 
 ### keepalived
 
-- [keepalived.conf - configuration file for keepalived - Linux Man Pages (5)](https://www.systutorials.com/docs/linux/man/5-keepalived.conf/)
+- [./cookbooks/keepalived/files/etc/keepalived/man-8-keepalived](./cookbooks/keepalived/files/etc/keepalived/man-8-keepalived)
 - [./cookbooks/keepalived/files/etc/keepalived/man-5-keepalived.conf](./cookbooks/keepalived/files/etc/keepalived/man-5-keepalived.conf)
+- [./cookbooks/keepalived/files/usr/share/doc/keepalived-1.3.5/keepalived.conf.SYNOPSIS](./cookbooks/keepalived/files/usr/share/doc/keepalived-1.3.5/keepalived.conf.SYNOPSIS)
+- [keepalived | Read the Docs](https://readthedocs.org/projects/keepalived/)
+- [keepalived.conf - configuration file for keepalived - Linux Man Pages (5)](https://www.systutorials.com/docs/linux/man/5-keepalived.conf/)
 - [17.5.1 Keepalived構成ファイルについて](https://docs.oracle.com/cd/E39368_01/e48214/section_wv3_hjn_pr.html)
