@@ -65,9 +65,9 @@ Vagrant.configure("2") do |config|
     s.inline = "timedatectl set-timezone Asia/Tokyo"
   end
 
-  config.vm.provision "yum:install:epel-release", type: :shell do |s|
-    s.inline = "yum install epel-release -y"
-  end
+  # config.vm.provision "yum:install:epel-release", type: :shell do |s|
+  #   s.inline = "yum install epel-release -y"
+  # end
 
   config.vm.provision "yum:install:tmux", type: :shell do |s|
     s.inline = "yum install tmux -y"
