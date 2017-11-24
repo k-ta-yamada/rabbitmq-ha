@@ -1,5 +1,7 @@
 common:
-  vip: &vip 192.168.1.100
+  vip:
+    nic: &nic eth1
+    ip:  &vip 192.168.1.100
   hostnames:
     vip:     &hostname_vip mq
     primary: &primary      mq1
@@ -88,12 +90,12 @@ keepalived:
       weight:   2
     vrrp_instance:
       name: VI_1
-      interface: eth1
+      interface: *nic
       state: BACKUP
       virtual_router_id: 51
       priority: 100
       virtual_ipaddress:
         - address:   *vip
-          interface: eth1
+          interface: *nic
       track_script:
         - chk_haproxy
