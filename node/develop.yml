@@ -3,9 +3,10 @@ common:
     nic: &nic eth1
     ip:  &vip 192.168.1.100
   hostnames:
-    vip:     &hostname_vip mq
-    primary: &primary      mq1
-    standby: &standby      mq2
+    vip:     &hostname_vip     mq
+    primary: &hostname_primary mq1
+    standby: &hostname_standby mq2
+  backend_prefix: backend-
 
 hosts:
   file_name: /etc/hosts
@@ -13,15 +14,14 @@ hosts:
     - host: *hostname_vip
       ip:   *vip
   frontend:
-    - host: *primary
+    - host: *hostname_primary
       ip:   192.168.1.101
-    - host: *standby
+    - host: *hostname_standby
       ip:   192.168.1.102
-  backend_prefix: backend-
   backend:
-    - host: *primary
+    - host: *hostname_primary
       ip:   192.168.2.101
-    - host: *standby
+    - host: *hostname_standby
       ip:   192.168.2.102
 
 rabbitmq:
@@ -47,11 +47,11 @@ haproxy:
         balance: roundrobin
         servers:
           - name:     rabbitmq-server1
-            address:  mq1
+            address:  *hostname_primary
             port:     5672
             settings: check inter 1s rise 2 fall 3
           - name:     rabbitmq-server2
-            address:  mq2
+            address:  *hostname_standby
             port:     5672
             settings: check inter 1s rise 2 fall 3
     http:
@@ -62,11 +62,11 @@ haproxy:
         balance: roundrobin
         servers:
           - name:     rabbitmq_mng1
-            address:  mq1
+            address:  *hostname_primary
             port:     15672
             settings: check inter 1s rise 2 fall 3
           - name:     rabbitmq_mng2
-            address:  mq2
+            address:  *hostname_standby
             port:     15672
             settings: check inter 1s rise 2 fall 3
     stats:
